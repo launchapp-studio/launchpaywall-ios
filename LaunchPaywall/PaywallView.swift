@@ -17,6 +17,8 @@ struct PaywallView: View {
 
     /// Locally selected package the user intends to purchase.
     @State private var selectedPackage: Package?
+    /// Identifier of the card currently snapped in the horizontal carousel.
+    @State private var scrolledPackageID: String?
     /// Error message backing the failure alert.
     @State private var errorMessage: String?
     @State private var showError = false
@@ -84,21 +86,31 @@ struct PaywallView: View {
     private var planSelector: some View {
         if subscriptions.isBusy && subscriptions.offerings == nil {
             ProgressView().controlSize(.large).padding(.vertical, 40)
-        } else if let offering = subscriptions.offerings?.current {
-            VStack(spacing: 12) {
-                if let annual = offering.annual {
-                    PlanCard(package: annual,
-                             isSelected: selectedPackage?.identifier == annual.identifier,
-                             badge: "Popular · Mejor valor") {
-                        selectedPackage = annual
+        } else if let offering = subscriptions.offerings?.current,
+                  !orderedPackages(offering).isEmpty {
+            let packages = orderedPackages(offering)
+            ScrollView(.horizontal) {
+                HStack(spacing: 16) {
+                    ForEach(packages, id: \.identifier) { package in
+                        PlanCard(package: package,
+                                 isSelected: selectedPackage?.identifier == package.identifier)
+                            .containerRelativeFrame(.horizontal)
+                            .id(package.identifier)
+                            .onTapGesture {
+                                withAnimation(.snappy) { scrolledPackageID = package.identifier }
+                            }
                     }
                 }
-                if let monthly = offering.monthly {
-                    PlanCard(package: monthly,
-                             isSelected: selectedPackage?.identifier == monthly.identifier,
-                             badge: nil) {
-                        selectedPackage = monthly
-                    }
+                .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned)
+            .safeAreaPadding(.horizontal, 32)
+            .scrollPosition(id: $scrolledPackageID)
+            .scrollIndicators(.hidden)
+            .onChange(of: scrolledPackageID) { _, newID in
+                // Keep the selected package in sync with the centered card.
+                if let newID, let match = packages.first(where: { $0.identifier == newID }) {
+                    selectedPackage = match
                 }
             }
         } else {
@@ -107,6 +119,11 @@ struct PaywallView: View {
                 .foregroundStyle(.secondary)
                 .padding(.vertical, 40)
         }
+    }
+
+    /// Orders the offering's packages as Annual, Monthly, Lifetime (available only).
+    private func orderedPackages(_ offering: Offering) -> [Package] {
+        [offering.annual, offering.monthly, offering.lifetime].compactMap { $0 }
     }
 
     // MARK: - Footer
@@ -159,8 +176,11 @@ struct PaywallView: View {
     private func loadOfferings() async {
         do {
             let offerings = try await subscriptions.fetchOfferings()
-            if selectedPackage == nil {
-                selectedPackage = offerings.current?.annual ?? offerings.current?.monthly
+            if selectedPackage == nil, let current = offerings.current {
+                // Prefer Annual, then Monthly, then Lifetime as the default.
+                let initial = current.annual ?? current.monthly ?? current.lifetime
+                selectedPackage = initial
+                scrolledPackageID = initial?.identifier
             }
         } catch {
             present(error)
@@ -222,48 +242,87 @@ private struct BenefitRow: View {
 private struct PlanCard: View {
     let package: Package
     let isSelected: Bool
-    let badge: String?
-    let action: () -> Void
+
+    private var isLifetime: Bool { package.packageType == .lifetime }
+
+    private var badgeText: LocalizedStringKey? {
+        switch package.packageType {
+        case .annual: return "Más Popular"
+        case .lifetime: return "Pago Único"
+        default: return nil
+        }
+    }
+
+    private var billingCaption: LocalizedStringKey {
+        switch package.packageType {
+        case .annual: return "Facturado anualmente"
+        case .lifetime: return "Acceso de por vida"
+        default: return "Facturado mensualmente"
+        }
+    }
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 16) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .foregroundStyle(isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+        VStack(spacing: 14) {
+            badge
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(package.storeProduct.localizedTitle)
-                        .font(.headline)
-                    Text(package.storeProduct.localizedPriceString)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
+            Image(systemName: isLifetime ? "crown.fill" : "sparkles")
+                .font(.system(size: 40, weight: .bold))
+                .foregroundStyle(isLifetime ? AnyShapeStyle(goldGradient) : AnyShapeStyle(.tint))
 
-                Spacer()
-
-                if let badge {
-                    Text(badge)
-                        .font(.caption2.bold())
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(.tint, in: Capsule())
-                        .foregroundStyle(.white)
-                }
+            VStack(spacing: 6) {
+                Text(package.storeProduct.localizedTitle)
+                    .font(.title3.bold())
+                    .multilineTextAlignment(.center)
+                Text(package.storeProduct.localizedPriceString)
+                    .font(.system(.largeTitle, design: .rounded).bold())
+                Text(billingCaption)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
-            .padding(16)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(isSelected ? AnyShapeStyle(.tint.opacity(0.10)) : AnyShapeStyle(.background))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary.opacity(0.25)),
-                                  lineWidth: isSelected ? 2 : 1)
-            )
+
+            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                .font(.title2)
+                .foregroundStyle(isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
         }
-        .buttonStyle(.plain)
+        .padding(24)
+        .frame(maxWidth: .infinity)
+        .frame(height: 280)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(isSelected ? AnyShapeStyle(.tint.opacity(0.08)) : AnyShapeStyle(.background))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(borderStyle, lineWidth: isSelected ? 2.5 : 1)
+        )
+        .scaleEffect(isSelected ? 1 : 0.93)
+        .animation(.snappy, value: isSelected)
+    }
+
+    @ViewBuilder
+    private var badge: some View {
+        if let badgeText {
+            Text(badgeText)
+                .font(.caption2.bold())
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(isLifetime ? AnyShapeStyle(goldGradient) : AnyShapeStyle(.tint), in: Capsule())
+                .foregroundStyle(.white)
+        } else {
+            // Reserve the badge height so all cards align vertically.
+            Color.clear.frame(height: 26)
+        }
+    }
+
+    private var goldGradient: LinearGradient {
+        LinearGradient(colors: [Color(red: 0.80, green: 0.60, blue: 0.10),
+                                Color(red: 1.0, green: 0.84, blue: 0.0)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+
+    private var borderStyle: AnyShapeStyle {
+        if isLifetime { return AnyShapeStyle(goldGradient) }
+        return isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary.opacity(0.25))
     }
 }
 
