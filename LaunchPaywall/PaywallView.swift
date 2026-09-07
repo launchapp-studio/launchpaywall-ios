@@ -110,11 +110,15 @@ struct PaywallView: View {
                                 .containerRelativeFrame(.horizontal)
                                 .id(package.identifier)
                                 .onTapGesture {
-                                    withAnimation(.snappy) { scrolledPackageID = package.identifier }
+                                    withAnimation(.snappy) {
+                                        scrolledPackageID = package.identifier
+                                        selectedPackage = package
+                                    }
                                 }
                         }
                     }
-                    .padding(.vertical, 12)
+                    .padding(.top, 14) // Margen superior para alojar la insignia sin alterar el layout
+                    .padding(.bottom, 10)
                     .scrollTargetLayout()
                 }
                 .scrollTargetBehavior(.viewAligned)
@@ -122,9 +126,10 @@ struct PaywallView: View {
                 .scrollPosition(id: $scrolledPackageID)
                 .scrollIndicators(.hidden)
                 .onChange(of: scrolledPackageID) { _, newID in
-                    // Keep the selected package in sync with the centered card.
                     if let newID, let match = packages.first(where: { $0.identifier == newID }) {
-                        selectedPackage = match
+                        withAnimation(.snappy) {
+                            selectedPackage = match
+                        }
                     }
                 }
 
@@ -237,6 +242,10 @@ struct PaywallView: View {
                 // Prefer Annual, then Monthly, then Lifetime as the default.
                 let initial = current.annual ?? current.monthly ?? current.lifetime
                 selectedPackage = initial
+
+                // A brief delay ensures the ScrollView has calculated its geometry
+                // before setting the initial position, avoiding layout glitches.
+                try? await Task.sleep(nanoseconds: 50_000_000)
                 scrolledPackageID = initial?.identifier
             }
         } catch {

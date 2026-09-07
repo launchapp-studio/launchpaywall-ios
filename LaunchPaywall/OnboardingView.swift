@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Model backing a single onboarding page.
-private struct OnboardingPage: Identifiable {
+struct OnboardingPage: Identifiable {
     let id = UUID()
     var symbol: String? = nil
     let title: String
@@ -16,14 +16,19 @@ private struct OnboardingPage: Identifiable {
     var usesAppIcon = false
 }
 
-/// Three-page, value-oriented onboarding shown once on first launch.
+/// Three-page, value-oriented onboarding sequence that can be used standalone
+/// or as a pre-sell funnel in existing apps.
 struct OnboardingView: View {
     /// Persists completion so the onboarding is not shown again.
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
+    let pages: [OnboardingPage]
+    let onComplete: (() -> Void)?
+
     @State private var selection = 0
 
-    private let pages: [OnboardingPage] = [
+    /// Default pages shown by the boilerplate.
+    static let defaultPages: [OnboardingPage] = [
         OnboardingPage(title: "Welcome to LaunchPaywall",
                        description: "The perfect foundation to launch your subscription app in record time.",
                        usesAppIcon: true),
@@ -34,6 +39,15 @@ struct OnboardingView: View {
                        title: "Secure Authentication",
                        description: "Sign in with Apple natively integrated with the iOS Keychain.")
     ]
+
+    /// Initializes the onboarding view with optional custom pages and a completion closure.
+    init(
+        pages: [OnboardingPage] = OnboardingView.defaultPages,
+        onComplete: (() -> Void)? = nil
+    ) {
+        self.pages = pages
+        self.onComplete = onComplete
+    }
 
     private var isLastPage: Bool { selection == pages.count - 1 }
 
@@ -72,7 +86,7 @@ struct OnboardingView: View {
             }
 
             Button("Skip") {
-                hasCompletedOnboarding = true
+                completeOnboarding()
             }
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.secondary)
@@ -92,10 +106,10 @@ struct OnboardingView: View {
                 .shadow(color: Color.accentColor.opacity(0.35), radius: 16, y: 8)
 
             VStack(spacing: 12) {
-                Text(page.title)
+                Text(LocalizedStringKey(page.title))
                     .font(.title2.bold())
                     .multilineTextAlignment(.center)
-                Text(page.description)
+                Text(LocalizedStringKey(page.description))
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -145,13 +159,30 @@ struct OnboardingView: View {
     /// Advances to the next page, or completes onboarding on the last page.
     private func advance() {
         if isLastPage {
-            hasCompletedOnboarding = true
+            completeOnboarding()
         } else {
             withAnimation { selection += 1 }
         }
     }
+
+    private func completeOnboarding() {
+        hasCompletedOnboarding = true
+        onComplete?()
+    }
 }
 
-#Preview {
+#Preview("Default Onboarding") {
     OnboardingView()
+}
+
+#Preview("Custom Pages + Callback") {
+    OnboardingView(
+        pages: [
+            OnboardingPage(symbol: "sparkles", title: "Discover Pro", description: "Unlock all premium features."),
+            OnboardingPage(symbol: "bolt.fill", title: "Lightning Fast", description: "Save hours of setup time.")
+        ],
+        onComplete: {
+            print("Onboarding completed")
+        }
+    )
 }

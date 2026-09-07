@@ -278,10 +278,11 @@ extension AuthManager: ASAuthorizationControllerPresentationContextProviding {
     /// Provides the anchor window used to present the Apple sign-in sheet.
     nonisolated func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         MainActor.assumeIsolated {
-            let scene = UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .first { $0.activationState == .foregroundActive }
-            return scene?.keyWindow ?? ASPresentationAnchor()
+            let windowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            let scene = windowScenes.first { $0.activationState == .foregroundActive } ?? windowScenes.first
+            // A foreground window scene always exists while the sign-in sheet is presented.
+            guard let scene else { preconditionFailure("No UIWindowScene available to anchor Sign in with Apple") }
+            return scene.keyWindow ?? UIWindow(windowScene: scene)
         }
     }
 }

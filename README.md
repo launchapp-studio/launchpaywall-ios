@@ -81,15 +81,38 @@ LaunchPaywall/
 
 ---
 
+## 🔄 Reusing Onboarding in Existing Apps (Paywall Pre-Sell)
+
+`OnboardingView` is modular and can be embedded into existing apps to serve as a high-converting pre-sell sequence right before triggering your paywall:
+
+```swift
+// Default boilerplate onboarding with a completion callback
+OnboardingView {
+    showPaywall = true
+}
+
+// Or fully custom pages tailored to your app
+OnboardingView(
+    pages: [
+        OnboardingPage(symbol: "sparkles", title: "Discover Pro", description: "Unlock advanced features."),
+        OnboardingPage(symbol: "bolt.fill", title: "Boost Productivity", description: "Save hours every week.")
+    ],
+    onComplete: {
+        showPaywall = true
+    }
+)
+```
+
+---
+
 ## ⭐ Upgrade to Pro Version
 
-Want to accelerate your launch even further? The **Pro version** of LaunchPaywall includes:
+Want to save even more development time? The **Pro version** of LaunchPaywall includes:
 
-- 🎨 Multiple A/B-tested, high-conversion paywall templates.
-- 📊 Preconfigured analytics dashboard and advanced events.
-- 🌍 Ready-to-use multi-language localization.
-- 🧩 Premium components (account management, promo codes, upsells).
-- 🚀 Priority support and continuous updates.
+- 🎨 **Additional paywall layouts** (Feature comparison table, Minimalist layout, Social proof paywall).
+- ⚙️ **Full `SettingsView`** with account management, app icon picker, and RevenueCat Customer Center integration.
+- 🧩 **Extra UI components** (Promo code banners, feature gates, custom app review prompts).
+- 📐 **Figma UI Kit** with editable design components and App Store screenshot templates.
 
 The Pro version will be **available soon on Lemon Squeezy**. ⭐ Star and watch this repository to be notified as soon as it launches.
 
