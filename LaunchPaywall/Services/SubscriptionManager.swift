@@ -8,24 +8,24 @@
 import Foundation
 import RevenueCat
 
-// MARK: - Probar compras en el simulador con StoreKit
+// MARK: - Testing purchases in the simulator with StoreKit
 //
-// Para probar compras SIN conectarte a App Store Connect, añade un
-// StoreKit Configuration File y actívalo en el scheme:
+// To test purchases WITHOUT connecting to App Store Connect, add a
+// StoreKit Configuration File and enable it in the scheme:
 //
-// 1. Xcode > File > New > File from Template… > busca "StoreKit Configuration File".
-//    Guárdalo (p. ej. "Products.storekit") dentro del target LaunchPaywall.
-// 2. Ábrelo y pulsa "+" para crear productos: usa auto-renewable subscriptions
-//    con los MISMOS Product IDs que configuraste en RevenueCat / App Store Connect
-//    (p. ej. "com.launchpaywall.pro.annual" y ".monthly").
-// 3. Product > Scheme > Edit Scheme… > Run > pestaña Options >
-//    "StoreKit Configuration" > selecciona tu archivo .storekit.
-// 4. Ejecuta en el simulador: las compras se resolverán localmente y RevenueCat
-//    las reconocerá en modo sandbox/StoreKit sin cargos reales.
-// 5. Para reiniciar el estado: Debug > StoreKit > Manage Transactions… (borra compras).
+// 1. Xcode > File > New > File from Template… > search "StoreKit Configuration File".
+//    Save it (e.g. "Products.storekit") inside the LaunchPaywall target.
+// 2. Open it and tap "+" to create products: use auto-renewable subscriptions
+//    with the SAME Product IDs you configured in RevenueCat / App Store Connect
+//    (e.g. "com.launchpaywall.pro.annual" and ".monthly").
+// 3. Product > Scheme > Edit Scheme… > Run > Options tab >
+//    "StoreKit Configuration" > select your .storekit file.
+// 4. Run in the simulator: purchases resolve locally and RevenueCat
+//    recognizes them in sandbox/StoreKit mode with no real charges.
+// 5. To reset state: Debug > StoreKit > Manage Transactions… (delete purchases).
 //
-// Nota: el archivo .storekit es solo para desarrollo; en producción los productos
-// provienen de App Store Connect.
+// Note: the .storekit file is for development only; in production products
+// come from App Store Connect.
 
 /// Errors surfaced by the subscription / purchase flow.
 enum SubscriptionError: LocalizedError {
@@ -70,6 +70,12 @@ final class SubscriptionManager {
     /// When true, forces `isProUser` on for SwiftUI previews (no network).
     private let isProMock: Bool
 
+#if DEBUG
+    /// Unlocks Pro locally after a simulated purchase while prototyping,
+    /// even when the RevenueCat entitlement is not yet mapped in the dashboard.
+    private(set) var debugProUnlocked = UserDefaults.standard.bool(forKey: "debugProUnlocked")
+#endif
+
     /// - Parameter isProMock: Simulates an active Pro entitlement for the Canvas.
     init(isProMock: Bool = false) {
         self.isProMock = isProMock
@@ -80,6 +86,9 @@ final class SubscriptionManager {
     /// Whether the user currently owns an active "pro_access" entitlement.
     var isProUser: Bool {
         if isProMock { return true }
+        #if DEBUG
+        if debugProUnlocked { return true }
+        #endif
         return customerInfo?.entitlements[AppConfig.entitlementID]?.isActive == true
     }
 
@@ -139,6 +148,13 @@ final class SubscriptionManager {
                 throw SubscriptionError.purchaseCancelled
             }
             customerInfo = result.customerInfo
+            logEntitlementState(result.customerInfo, context: "purchase")
+            #if DEBUG
+            // Prototype flow: a successful simulated purchase unlocks Pro even
+            // if the entitlement is not mapped on the RevenueCat dashboard yet.
+            debugProUnlocked = true
+            UserDefaults.standard.set(true, forKey: "debugProUnlocked")
+            #endif
             TelemetryService.log(.purchaseSuccess, parameters: ["package": package.identifier])
         } catch let error as SubscriptionError {
             throw error
@@ -195,4 +211,26 @@ final class SubscriptionManager {
     private func ensureConfigured() throws {
         guard isConfigured else { throw SubscriptionError.notConfigured }
     }
+
+    /// Logs which entitlements RevenueCat returned so mismatches between the
+    /// configured `pro_access` entitlement and the dashboard are easy to spot.
+    private func logEntitlementState(_ info: CustomerInfo, context: String) {
+        #if DEBUG
+        let active = info.entitlements.active.keys.sorted().joined(separator: ", ")
+        let all = info.entitlements.all.keys.sorted().joined(separator: ", ")
+        let expected = AppConfig.entitlementID
+        let isActive = info.entitlements[expected]?.isActive == true
+        print("""
+        [RevenueCat][\(context)] expected='\(expected)' active=\(isActive) \
+        activeKeys=[\(active)] allKeys=[\(all)]
+        """)
+        #endif
+    }
+
+#if DEBUG
+    func toggleDebugPro() {
+        debugProUnlocked.toggle()
+        UserDefaults.standard.set(debugProUnlocked, forKey: "debugProUnlocked")
+    }
+#endif
 }

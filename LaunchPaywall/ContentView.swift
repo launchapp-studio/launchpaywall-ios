@@ -16,91 +16,164 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 28) {
-                    if subscriptionManager.isProUser {
-                        proContent
-                    } else {
-                        freeContent
+            ZStack {
+                Color(.systemGroupedBackground).ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: 24) {
+                        headerCard
+                        gatedFeatureCard
+                        bottomActions
                     }
-                    authSection
+                    .padding(24)
                 }
-                .padding(24)
             }
-            .navigationTitle("LaunchPaywall")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
         }
     }
 
-    // MARK: - Free tier
+    // MARK: - Header card
 
-    private var freeContent: some View {
-        VStack(spacing: 24) {
-            Text("Plan Gratuito")
-                .font(.caption.bold())
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(.secondary.opacity(0.15), in: Capsule())
-                .foregroundStyle(.secondary)
+    private var headerCard: some View {
+        HStack(spacing: 16) {
+            appIcon
+                .frame(width: 48, height: 48)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-            VStack(spacing: 16) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 44, weight: .bold))
-                    .foregroundStyle(.secondary)
-                Text("Funciones bloqueadas")
-                    .font(.title2.bold())
-                Text("Actualiza a Pro para desbloquear todas las funciones premium.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(AppConfig.appName)
+                    .font(.title3.bold())
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(subscriptionManager.isProUser ? Color.green : Color.secondary)
+                        .frame(width: 8, height: 8)
+                    Text(subscriptionManager.isProUser ? "Pro Plan Active" : "Free Plan")
+                        .font(.subheadline)
+                        .foregroundStyle(subscriptionManager.isProUser ? Color.green : Color.secondary)
+                }
             }
 
-            VStack(alignment: .leading, spacing: 12) {
-                LockedFeatureRow(title: "Uso ilimitado")
-                LockedFeatureRow(title: "Funciones avanzadas")
-                LockedFeatureRow(title: "Soporte prioritario")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.secondarySystemGroupedBackground))
+        )
+    }
 
-            Button {
-                showPaywall = true
-            } label: {
-                Text("Obtener Pro")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, minHeight: 26)
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+    /// App icon from the bundle, with the brand gradient as fallback.
+    @ViewBuilder
+    private var appIcon: some View {
+        if let uiImage = Bundle.main.appIcon {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFill()
+        } else {
+            Image(systemName: "sparkles")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(LinearGradient(colors: [.indigo, .purple],
+                                           startPoint: .topLeading, endPoint: .bottomTrailing))
         }
     }
 
-    // MARK: - Pro tier
+    // MARK: - Gated feature card
 
-    private var proContent: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "crown.fill")
-                .font(.system(size: 52, weight: .bold))
-                .foregroundStyle(.yellow)
-                .padding(24)
-                .background(.yellow.opacity(0.15), in: Circle())
-
-            VStack(spacing: 8) {
-                Text("Acceso Pro Activo")
-                    .font(.largeTitle.bold())
-                Text("¡Gracias por tu apoyo! Ya tienes todo desbloqueado.")
+    @ViewBuilder
+    private var gatedFeatureCard: some View {
+        VStack(spacing: 16) {
+            if subscriptionManager.isProUser {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(.tint)
+                Text("Welcome to Pro!")
+                    .font(.title2.bold())
+                Text("You have unlimited access to all premium features.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-            }
+            } else {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundStyle(.tint)
+                Text("Premium Features")
+                    .font(.title2.bold())
+                Text("Upgrade to Pro to unlock the app's full potential.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
 
-            VStack(alignment: .leading, spacing: 12) {
-                UnlockedFeatureRow(title: "Uso ilimitado")
-                UnlockedFeatureRow(title: "Funciones avanzadas")
-                UnlockedFeatureRow(title: "Soporte prioritario")
+                VStack(alignment: .leading, spacing: 12) {
+                    LockedFeatureRow(icon: "infinity", title: "Unlimited usage")
+                    LockedFeatureRow(icon: "bolt.fill", title: "Advanced features")
+                    LockedFeatureRow(icon: "star.fill", title: "Priority support")
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color(.secondarySystemGroupedBackground))
+        )
+    }
+
+    // MARK: - Primary button
+
+    private var getProButton: some View {
+        Button {
+            showPaywall = true
+        } label: {
+            Text("Get Pro")
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, minHeight: 50)
+                .background(
+                    LinearGradient(colors: [Color(red: 0.071, green: 0.063, blue: 0.102),
+                                            Color(red: 0.439, green: 0.208, blue: 0.871)],
+                                   startPoint: .leading, endPoint: .trailing),
+                    in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Bottom actions
+
+    private var bottomActions: some View {
+        VStack(spacing: 12) {
+            if !subscriptionManager.isProUser {
+                getProButton
+            }
+            authSection
+
+#if DEBUG
+            VStack {
+                Button(action: {
+                    subscriptionManager.toggleDebugPro()
+                }) {
+                    Label(
+                        subscriptionManager.debugProUnlocked ? "Debug: Switch to FREE" : "Debug: Switch to PRO",
+                        systemImage: "ant.fill"
+                    )
+                    .font(.caption.bold())
+                    .foregroundColor(.orange)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 12)
+                    .background(Color.orange.opacity(0.15))
+                    .cornerRadius(8)
+                }
+            }
+            .padding(.top, 8)
+#endif
         }
     }
 
@@ -108,13 +181,11 @@ struct ContentView: View {
 
     @ViewBuilder
     private var authSection: some View {
-        Divider().padding(.vertical, 8)
-
         if authManager.isAuthenticated {
             VStack(spacing: 8) {
-                Label(authManager.userEmail ?? "Sesión iniciada", systemImage: "person.crop.circle.fill")
+                Label(authManager.userEmail ?? "Signed in", systemImage: "person.crop.circle.fill")
                     .font(.subheadline)
-                Button("Cerrar sesión", role: .destructive) {
+                Button("Sign out", role: .destructive) {
                     try? authManager.signOut()
                 }
                 .font(.subheadline)
@@ -135,32 +206,27 @@ struct ContentView: View {
 // MARK: - Feature rows
 
 private struct LockedFeatureRow: View {
-    let title: String
+    let icon: String
+    let title: LocalizedStringKey
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "lock.fill").foregroundStyle(.secondary)
-            Text(title).foregroundStyle(.secondary)
-        }
-    }
-}
-
-private struct UnlockedFeatureRow: View {
-    let title: String
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+            Image(systemName: icon)
+                .font(.body)
+                .foregroundStyle(.tint)
+                .frame(width: 26)
             Text(title)
+                .font(.subheadline)
         }
     }
 }
 
-#Preview("Gratuito") {
+#Preview("Free") {
     ContentView()
         .environment(AuthManager())
         .environment(SubscriptionManager())
 }
 
-#Preview("Pro + Autenticado") {
+#Preview("Pro + Authenticated") {
     ContentView()
         .environment(AuthManager(isAuthenticatedMock: true))
         .environment(SubscriptionManager(isProMock: true))

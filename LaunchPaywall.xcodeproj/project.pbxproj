@@ -111,6 +111,11 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
+				de,
+				fr,
+				it,
+				pt,
 			);
 			mainGroup = 1E567467304728D000CE48FC;
 			minimizedProjectReferenceProxies = 1;
@@ -270,7 +275,7 @@
 				CODE_SIGN_ENTITLEMENTS = LaunchPaywall/LaunchPaywall.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z8MDRY78Z4;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -290,7 +295,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.LaunchPaywall;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.launchpaywall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -314,7 +319,7 @@
 				CODE_SIGN_ENTITLEMENTS = LaunchPaywall/LaunchPaywall.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z8MDRY78Z4;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -334,7 +339,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.LaunchPaywall;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.launchpaywall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
