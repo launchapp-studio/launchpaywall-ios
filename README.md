@@ -9,6 +9,12 @@
 
 ## Overview
 
+<br>
+<p align="center">
+<img width="600" height="1304" alt="demo" src="https://github.com/user-attachments/assets/e6075846-cd1d-4d4d-8f19-57f00ec445ce" />
+</p>
+<br>
+
 **LaunchPaywall** is an **open-core** boilerplate that gives you the foundational service layer every subscription app needs: sign-in, purchase management, and a production-ready paywall experience. It is written entirely in **Swift 6** with modern **SwiftUI** syntax (`@Observable`, `@Environment`, `async/await`, `@MainActor`), so you can focus on your product instead of rewriting the plumbing.
 
 The open-core version includes everything required for a working MVP. Premium templates, additional components, and paywall variants are available in the Pro version (see below).
