@@ -12,14 +12,30 @@
 		1E3D39353047855F00081E65 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3D39343047855F00081E65 /* RevenueCatUI */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AA000000000000000000000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E567468304728D000CE48FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E56746F304728D000CE48FC;
+			remoteInfo = LaunchPaywall;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1E567470304728D000CE48FC /* LaunchPaywall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaunchPaywall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000002 /* LaunchPaywallTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaunchPaywallTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1E567472304728D000CE48FC /* LaunchPaywall */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = LaunchPaywall;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000009 /* LaunchPaywallTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LaunchPaywallTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +48,13 @@
 				1E3D39353047855F00081E65 /* RevenueCatUI in Frameworks */,
 				1E3D39313047855F00081E65 /* RevenueCat in Frameworks */,
 				1E3D392F3047855F00081E65 /* ReceiptParser in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				1E567472304728D000CE48FC /* LaunchPaywall */,
+				AA0000000000000000000009 /* LaunchPaywallTests */,
 				1E3D392D3047855F00081E65 /* Frameworks */,
 				1E567471304728D000CE48FC /* Products */,
 			);
@@ -58,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				1E567470304728D000CE48FC /* LaunchPaywall.app */,
+				AA0000000000000000000002 /* LaunchPaywallTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,6 +115,29 @@
 			productReference = 1E567470304728D000CE48FC /* LaunchPaywall.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA0000000000000000000001 /* LaunchPaywallTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000006 /* Build configuration list for PBXNativeTarget "LaunchPaywallTests" */;
+			buildPhases = (
+				AA0000000000000000000003 /* Sources */,
+				AA0000000000000000000004 /* Frameworks */,
+				AA0000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000000A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000009 /* LaunchPaywallTests */,
+			);
+			name = LaunchPaywallTests;
+			packageProductDependencies = (
+			);
+			productName = LaunchPaywallTests;
+			productReference = AA0000000000000000000002 /* LaunchPaywallTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -102,6 +150,10 @@
 				TargetAttributes = {
 					1E56746F304728D000CE48FC = {
 						CreatedOnToolsVersion = 26.5;
+					};
+					AA0000000000000000000001 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 1E56746F304728D000CE48FC;
 					};
 				};
 			};
@@ -128,12 +180,20 @@
 			projectRoot = "";
 			targets = (
 				1E56746F304728D000CE48FC /* LaunchPaywall */,
+				AA0000000000000000000001 /* LaunchPaywallTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1E56746E304728D000CE48FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000000005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -150,7 +210,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA0000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA000000000000000000000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E56746F304728D000CE48FC /* LaunchPaywall */;
+			targetProxy = AA000000000000000000000B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1E567479304728D300CE48FC /* Debug */ = {
@@ -355,6 +430,46 @@
 			};
 			name = Release;
 		};
+		AA0000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.launchpaywall.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaunchPaywall.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaunchPaywall";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchappstudio.launchpaywall.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaunchPaywall.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LaunchPaywall";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -372,6 +487,15 @@
 			buildConfigurations = (
 				1E56747C304728D300CE48FC /* Debug */,
 				1E56747D304728D300CE48FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000006 /* Build configuration list for PBXNativeTarget "LaunchPaywallTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000007 /* Debug */,
+				AA0000000000000000000008 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -23,7 +23,7 @@ The open-core version includes everything required for a working MVP. Premium te
 
 - 🔐 **Sign in with Apple + native Keychain** — authentication with `AuthenticationServices` and secure persistence of the user identifier via the `Security` API.
 - 💳 **RevenueCat v5 integration** — configuration, `Offerings`, package purchases, restoring purchases, and identity sync (`logIn`/`logOut`).
-- 🎯 **High-conversion paywall + 3-step onboarding** — annual/monthly plan selector with a highlighted badge, and paged onboarding persisted with `@AppStorage`.
+- 🎯 **Customizable paywall + 3-step onboarding** — annual/monthly plan selector with a highlighted badge, and paged onboarding persisted with `@AppStorage`.
 - 🌍 **Native multi-language localization (i18n)** — 6 languages out of the box (English, Spanish, German, French, Italian, Portuguese) powered by the `Localizable.xcstrings` String Catalog, with English as the source language.
 - 🧪 **Local debug testing mode** — a `#if DEBUG` flow with `UserDefaults` persistence lets you exercise the entire paywall and switch between Free/Pro plans without wiring up real RevenueCat accounts or StoreKit during development.
 - 🔬 **Xcode Canvas mocks & structured OSLog telemetry** — preview initializers (`isProMock`, `isAuthenticatedMock`) to preview states without networking, and a lightweight analytics abstraction built on `OSLog`.
@@ -34,7 +34,7 @@ The open-core version includes everything required for a working MVP. Premium te
 LaunchPaywall/
 ├── LaunchPaywallApp.swift        # Entry point: injects managers and picks onboarding vs. content
 ├── ContentView.swift            # Main view: Free / Pro states + Sign in with Apple
-├── PaywallView.swift            # High-conversion paywall (plans, purchase, restore)
+├── PaywallView.swift            # Customizable paywall (plans, purchase, restore)
 ├── OnboardingView.swift         # 3-screen paged onboarding
 ├── Localizable.xcstrings        # String Catalog: 6 languages (en source + es, de, fr, it, pt)
 └── Services/
@@ -89,7 +89,7 @@ LaunchPaywall/
 
 ## 🔄 Reusing Onboarding in Existing Apps (Paywall Pre-Sell)
 
-`OnboardingView` is modular and can be embedded into existing apps to serve as a high-converting pre-sell sequence right before triggering your paywall:
+`OnboardingView` is modular and can be embedded into existing apps to serve as a pre-sell sequence right before triggering your paywall:
 
 ```swift
 // Default boilerplate onboarding with a completion callback
@@ -111,16 +111,17 @@ OnboardingView(
 
 ---
 
-## ⭐ Upgrade to Pro Version
+## ⭐ LaunchPaywall Pro
 
-Want to save even more development time? The **Pro version** of LaunchPaywall includes:
+Need more layout variations and styling controls?
 
-- 🎨 **Additional paywall layouts** (Feature comparison table, Minimalist layout, Social proof paywall).
-- ⚙️ **Full `SettingsView`** with account management, app icon picker, and RevenueCat Customer Center integration.
-- 🧩 **Extra UI components** (Promo code banners, feature gates, custom app review prompts).
-- 📐 **Figma UI Kit** with editable design components and App Store screenshot templates.
+[👉 Join the Pro Waitlist](https://launchappstudio.lemonsqueezy.com/checkout/buy/a2c99739-e96d-4998-b6e6-6ae565a32149) to lock in an early launch discount.
 
-The Pro version will be **available soon on Lemon Squeezy**. ⭐ Star and watch this repository to be notified as soon as it launches.
+- **Multiple Paywall Layouts:** Feature lists, single-card, and multi-tier options.
+- **Theme Customization:** Parametric font styles, colors, and border controls.
+- **Lifetime Access:** One-time purchase with full source code ("as-is", no subscription) including all future Pro updates.
+
+⭐ Star and watch this repository to be notified as soon as it launches.
 
 ---
 
