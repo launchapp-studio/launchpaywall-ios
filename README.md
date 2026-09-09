@@ -44,6 +44,22 @@ LaunchPaywall/
     └── TelemetryService.swift   # Anonymous structured analytics with OSLog
 ```
 
+## 🧩 Modularity & Stripping Down (What you can delete)
+
+LaunchPaywall is built with a highly decoupled architecture. If your app doesn't need certain features, you can easily strip them out without breaking the rest of the flow.
+
+**Don't need Authentication?**
+If your app doesn't require user accounts or "Sign in with Apple":
+1. Delete `AuthManager.swift` and `SignInView.swift`.
+2. Go to your target's **Signing & Capabilities** and remove the "Sign in with Apple" capability.
+3. In your main `App` struct or `RootView.swift`, simply remove the `if authManager.isAuthenticated` check and route directly to your Onboarding or Main ContentView.
+
+**Don't need Subscriptions (RevenueCat)?**
+If you just want to use the boilerplate for the Onboarding UI and String Catalogs:
+1. Delete `SubscriptionManager.swift` and the RevenueCat SDK dependency.
+2. Remove the `PaywallView.swift` or replace its purchase action buttons with standard navigation links.
+3. Clean up the `AppConfig.swift` file by removing the RevenueCat API Key properties.
+
 ## Installation
 
 1. **Clone the repository**
@@ -87,6 +103,11 @@ LaunchPaywall/
 
 ---
 
+> 💡 **Ready for App Store submission?**  
+> Follow our step-by-step [Launch Checklist](CHECKLIST.md) to set up your Apple Developer capabilities, StoreKit products, and RevenueCat entitlements.
+
+---
+
 ## 🔄 Reusing Onboarding in Existing Apps (Paywall Pre-Sell)
 
 `OnboardingView` is modular and can be embedded into existing apps to serve as a pre-sell sequence right before triggering your paywall:
@@ -115,7 +136,7 @@ OnboardingView(
 
 Need more layout variations and styling controls?
 
-[👉 Join the Pro Waitlist](https://launchappstudio.lemonsqueezy.com/checkout/buy/a2c99739-e96d-4998-b6e6-6ae565a32149) to lock in an early launch discount.
+[👉 Join the Pro Waitlist](https://launchappstudio.lemonsqueezy.com/checkout/buy/4a13bf6d-bb7c-4837-bad4-6c860ab693f6) to lock in an early launch discount.
 
 - **Multiple Paywall Layouts:** Feature lists, single-card, and multi-tier options.
 - **Theme Customization:** Parametric font styles, colors, and border controls.
