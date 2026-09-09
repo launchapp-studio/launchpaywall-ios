@@ -23,6 +23,6 @@ enum AppConfig {
     static let entitlementID = "pro_access"
 
     /// Public-facing legal URLs surfaced in the paywall and settings.
-    static let privacyPolicyURL = URL(string: "https://github.com/launchappstudio/launchpaywall-ios/blob/main/PRIVACY.md")!
-    static let termsOfServiceURL = URL(string: "https://github.com/launchappstudio/launchpaywall-ios/blob/main/TERMS.md")!
+    static let privacyPolicyURL = URL(string: "https://github.com/launchapp-studio/launchpaywall-ios/blob/main/PRIVACY.md")!
+    static let termsOfServiceURL = URL(string: "https://github.com/launchapp-studio/launchpaywall-ios/blob/main/TERMS.md")!
 }

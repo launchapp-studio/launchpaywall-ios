@@ -8,7 +8,7 @@
 import RevenueCat
 import SwiftUI
 
-/// High-conversion paywall presenting the current RevenueCat offering with an
+/// Customizable paywall presenting the current RevenueCat offering with an
 /// annual (highlighted) and monthly plan, purchase and restore actions.
 struct PaywallView: View {
     @Environment(SubscriptionManager.self) private var subscriptions
