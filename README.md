@@ -65,7 +65,7 @@ If you just want to use the boilerplate for the Onboarding UI and String Catalog
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/launchappstudio/launchpaywall-ios.git
+   git clone https://github.com/launchapp-studio/launchpaywall-ios.git
    cd launchpaywall-ios
    ```
 
@@ -86,8 +86,8 @@ If you just want to use the boilerplate for the Onboarding UI and String Catalog
        static let revenueCatAPIKey = "appl_YOUR_REVENUECAT_PUBLIC_KEY"
        static let telemetryDeckAppID = "YOUR_TELEMETRYDECK_APP_ID"
        static let entitlementID = "pro_access" // must match your entitlement in RevenueCat
-       static let privacyPolicyURL = URL(string: "https://github.com/launchappstudio/launchpaywall-ios/blob/main/PRIVACY.md")!
-       static let termsOfServiceURL = URL(string: "https://github.com/launchappstudio/launchpaywall-ios/blob/main/TERMS.md")!
+       static let privacyPolicyURL = URL(string: "https://github.com/launchapp-studio/launchpaywall-ios/blob/main/PRIVACY.md")!
+       static let termsOfServiceURL = URL(string: "https://github.com/launchapp-studio/launchpaywall-ios/blob/main/TERMS.md")!
    }
    ```
 
@@ -147,5 +147,5 @@ Need more layout variations and styling controls?
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/launchappstudio">LaunchApp Studio</a>
+  Made with ❤️ by <a href="https://github.com/launchapp-studio">LaunchApp Studio</a>
 </p>

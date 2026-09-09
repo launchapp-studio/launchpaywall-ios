@@ -18,14 +18,14 @@ A step-by-step guide to take LaunchPaywall from this boilerplate to a production
 ## 3. RevenueCat Configuration
 - [ ] **Create Project & App:** Add a new App in the RevenueCat dashboard and input your Bundle ID and the Shared Secret from App Store Connect.
 - [ ] **Create Products:** Add the exact same Product IDs you created in App Store Connect.
-- [ ] **Create Entitlements:** Create an entitlement (e.g., `pro`) that unlocks the premium features.
-- [ ] **Attach Products:** Link your created Products to the `pro` entitlement.
+- [ ] **Create Entitlements:** Create an entitlement (e.g., `pro_access`) that unlocks the premium features.
+- [ ] **Attach Products:** Link your created Products to the `pro_access` entitlement.
 - [ ] **Create Offerings:** Create a `default` offering and attach the packages (e.g., Monthly, Annual) that contain your products.
 
 ## 4. Xcode Project Setup
 - [ ] **Update Bundle ID:** Change the default bundle identifier in target settings.
 - [ ] **Update API Keys:** Open `AppConfig.swift` and paste your RevenueCat Public API Key.
-- [ ] **Update Local StoreKit File:** Update `Configuration.storekit` with your new Product IDs for local simulator testing.
+- [ ] **Update Local StoreKit File:** Update `Products.storekit` with your new Product IDs for local simulator testing.
 - [ ] **Localization:** Review `Localizable.xcstrings` and update the app name and core strings.
 
 ## 5. Final Testing

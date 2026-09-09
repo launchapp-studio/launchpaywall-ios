@@ -42,4 +42,4 @@ Developers utilizing this open-core template to publish their own applications o
 
 ## 5. Contact Information
 
-For questions or inquiries regarding the codebase privacy practices, please open an issue in the official GitHub repository or reach out via [https://github.com/launchappstudio](https://github.com/launchappstudio).
+For questions or inquiries regarding the codebase privacy practices, please open an issue in the official GitHub repository or reach out via [https://github.com/launchapp-studio](https://github.com/launchapp-studio).
